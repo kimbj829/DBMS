@@ -1,6 +1,6 @@
 DBMS 수업(2024/02/19)
 
-========================================
+===================자료 정리=====================
 /* 
  DDL
  - CREAT(생성), ALTER(수정), DROP(삭제), TAUNCATE
@@ -41,7 +41,16 @@ like 사용법
 - 부분적으로 일치하는 컬럼을 조회할 떄 사용된다
 SELECT * FROM [테이블명] WHERE 컬럼명 like '';
 */
-=============================================================
+
+/*
+제약조건의 종류
+NOT NULL : NULL값 입력 금지
+UNIQUE : 중복값 입력 금지(NULL 값은 중복 입력 가능)
+PRIMARY KEY : 유일키(NOT NULL + NUIQUE)
+FOREIGN KEY : 해당 컬럼을 외래키로 지정(관계맺음)
+CHECK : 조건으로 설정된 값만 입력 가능
+*/
+===================실습 코드=====================
 CREATE TABLE BOARD(
 	BNO INT auto_increment primary KEY, 
     TITLE VARCHAR(50), 
