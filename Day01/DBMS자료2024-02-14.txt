@@ -1,7 +1,7 @@
 DBMS 수업(2024/02/14)
 
 프로그램 - mySQL
-========================================
+===================초기 설정=====================
 설치방법
 https://dev.mysql.com/downloads/installer/
 https://dev.mysql.com/downloads/workbench/
@@ -24,7 +24,13 @@ Authentication Method에서 Use Legacy Authentication Method(Retain MySQL 5.x Co
 
 Accounts and Roles
 MySQL Root Password : 1q2w3e4r
-========================================
+===================계정 설정=====================
+계정생성 ID : hr@localhost PW : hr
+create user hr@localhost identified by 'hr'
+
+hr@localhost에게 권한 부여
+grant all privileges on dbexam.* to hr@localhost
+===================자료 정리=====================
 종류 및 프로그램
 
 데이터베이스 (데이터의 집합, 대부분의 정보가 저장되고 관리 됨)
@@ -95,14 +101,7 @@ CRUD
 * Read(Retrieve) : 읽기, 인출(SELECT)
 * Update : 갱신(UPDATE)
 * Delete(Destroy) : 삭제, 파괴(DELETE)
-
-========================================
-계정생성 ID : hr@localhost PW : hr
-create user hr@localhost identified by 'hr'
-
-hr@localhost에게 권한 부여
-grant all privileges on dbexam.* to hr@localhost
-========================================
+===================커리큘럼=====================
 커리큘럼
 1. 설치, 개념정리, 간단하게 쿼리 연습
 2. select
