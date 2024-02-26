@@ -1,0 +1,216 @@
+/*
+Inner Join : 두 테이블을 모두 지정한 열의 데이터가 있어야 한다
+Outer Join : 1개의 테이블에만 데이터가 있어도 결과 조회가 가능
+Self Join : 자기자신과 참조 1개의 테이블을 참조
+*/
+
+-- self Join : 자기 자신과 조인한다는 의미로 1개의 테이블을 사용
+Create table emp1(
+	id int,
+    name varchar(30),
+    superiorId int
+);
+
+insert into emp1(id, name, superiorId)
+values(10001, '김대표', NULL),
+(10002, '장과장', 10001),
+(10003, '윤대리', 10002),
+(10004, '이대리', 10002),
+(10005, '박사원', NULL);
+
+SELECT * FROM emp1;
+
+-- 각 회사원들의 직속상관의 이름조회
+-- e1에 직속상관 id와 e2의 id를 결합시켜서 직속상관 이름을 가져옴
+select e1.id as '사번', e1.name as '사원',
+e2.name as '직속상관' from emp1 as e1
+join emp1 as e2 
+on e1.superiorID = e2.id;
+
+/*
+스칼라 서브쿼리
+- SELECT문 내부에 사용됨
+- 서브쿼리의 결과가 단일 값인 경우에 사용
+- 특정값 가져오는데 많이 사용됨
+
+상관 서브쿼리
+- WHERE절 내부에 사용
+- 서브쿼리의 결과는 외부 커리의 컬럼을 기반으로 계산
+
+Exists 서브쿼리
+- 서브쿼리가 하나 이상의 행을 반환하면 TRUE/행을 반환 하지 않으면 FALSE를 반환
+- WHERE or HAVING절 내부에 사용
+*/
+
+create table cust(
+id int auto_increment primary key,
+    name varchar(50),
+    email varchar(50),
+    phone varchar(100)
+);
+INSERT INTO cust (name, email, phone) 
+VALUES 
+('Alice', 'alice@example.com', '123-4567'),
+('Bob', 'bob@example.com', '234-5678'),
+('Charlie', 'charlie@example.com', '345-6789'),
+('David', 'david@example.com', '456-7890');
+
+create table orde(
+id int auto_increment primary key,
+    cust_id int,
+    order_date date
+);
+INSERT INTO orde (cust_id, order_date) VALUES 
+(1, '2022-03-01'),
+(1, '2022-03-03'),
+(2, '2022-03-02'),
+(3, '2022-03-01'),
+(3, '2022-03-04'),
+(3, '2022-03-05'),
+(4, '2022-03-01'),
+(4, '2022-03-03'),
+(4, '2022-03-04');
+
+-- ORDE 테이블에서 가장 많은 주문을 한 고객의 이름과 주문 수를 찾기
+select * from cust;
+select * from orde;
+
+
+SELECT name, order_counts.order_count from cust
+join(
+	select cust_id, count(*) as order_count from orde
+    group by cust_id
+    order by order_count desc limit 1
+    ) as order_counts
+on cust.id = order_counts.cust_id;
+
+-- orde 테이블에서 주문한 고객의 이름, 고객의 총 주문 건수를 계산하여 출력
+SELECT c.name,
+		(select count(*) from orde as o
+        where o.cust_id = c.id) as total_orders from cust c;
+        
+/* 
+orde 테이블에서 주문한 고객의 이름, 해당 고객의 총 주문 건수가
+2건 잇아인 테이블만 출력하세요
+*/
+
+SELECT c.name,
+		(select count(*) from orde as o
+        where o.cust_id = c.id) as total_orders from cust c
+        where (select count(*) from orde as o
+        where o.cust_id = c.id) >= 2;
+
+SELECT c.name, o.total_orders from cust c
+join(
+	select cust_id, count(*) as total_orders
+    from orde group by cust_id having count(*) >= 2
+    ) o on c.id = o.cust_id;
+    
+/*
+exists 서브쿼리
+- WHERE or HAVING절 내부에 사용한다
+*/
+
+select * from orde;
+select name from cust c
+where exists (select * from orde o where o.cust_id = c.id
+and o.order_date = '2022-03-03');
+
+select name from cust c
+where not exists (select * from orde o where o.cust_id = c.id
+and o.order_date = '2022-03-03');
+
+/*
+1. 다음 식당의 정보를 담은 rest_info 테이블이다
+rest_info 테이블은 다음과 같으며 rest_id, rest_name, food_type,
+views, favorites, parking_lot, address, tel은
+식당id, 식당 이름, 음식 종류, 조회수, 즐겨찾기 수, 주차장 유무, 주소,
+전화번호를 의미한다. rest_info 테이블에서 음식 종류별로 즐겨찾기수가 가장 많은
+식당의 음식종류, id, 식당이름 즐겨찾기수를 조회하는 sql문을 작성해주세요
+결과는 음식 종류를 기준으로 내림차순 정렬
+
+결과)
+FOOD_TYPE	REST_ID		REST_NAME		FAVORITES
+한식			00001		은돼지식당			734
+일식			00004		스시사카우스		230
+양식			00003		따띠따띠뜨			102
+*/
+
+create table rest_info(
+rest_id varchar(5),
+    rest_name varchar(50),
+    food_type varchar(20),
+    views int,
+    favorites int,
+    parking_log varchar(1),
+    address varchar(100),
+    tel varchar(100)
+);
+
+insert into rest_info(rest_id, rest_name, food_type, views, favorites,
+parking_log, address, tel) values
+('00001', '은돼지식당', '한식', 1150345, 734, 'N', '서울특별시 중구 다산로 149', '010-4484-8751'),
+('00002', '하이까쯔네', '일식', 120034, 112, 'N', '서울시 중구 신당동 375-21', NULL),
+('00003', '따띠따띠뜨', '양식', 1234023, 102, 'N', '서울시 강남구 신사동 627-3 1F', '02-6397-1023'),
+('00004', '스시사카우스', '일식', 1522074, 230, 'N', '서울시 서울시 강남구 신사동 627-27', '010-9394-2554'),
+('00005', '코슌스', '일식', 15301, 123, 'N', '서울특별시 강남구 언주로153길', '010-1315-8729');
+
+SELECT food_type, rest_id, rest_name, favorites
+from rest_info
+where(food_type, favorites)
+in (select food_type, max(favorites) from rest_info
+	group by food_type)
+order by food_type desc;
+
+/*
+PLACES 테이블은 공간 임대 서비스에 등록된 공간의 정보를 담은 테이블입니다. 
+PLACES 테이블의 구조는 다음과 같으며 ID, NAME, HOST_ID는 
+각각 공간의 아이디, 이름, 공간을 소유한 유저의 아이디를 나타냅니다. 
+ID는 기본키입니다.
+
+이 서비스에서는 공간을 둘 이상 등록한 사람을 "헤비 유저"라고 부릅니다. 
+헤비 유저가 등록한 공간의 정보를 아이디 순으로 조회하는 SQL문을 작성해주세요.
+
+760849번 유저는 공간을 3개 등록했으므로 이 유저는 헤비유저입니다.
+30900122번 유저는 공간을 2개 등록했으므로 이 유저는 헤비유저입니다.
+21058208번 유저는 공간을 1개 등록했으므로 이 유저는 헤비유저가 아닙니다.
+
+실행결과)
+ID 						NAME  							HOST_ID
+4431977 BOUTIQUE STAYS - Somerset Terrace, Pet Friendly  760849
+5194998  BOUTIQUE STAYS - Elwood Beaches 3, Pet Friendly  760849
+16045624 Urban Jungle in the Heart of Melbourne  		 30900122
+17810814 Stylish Bayside Retreat with a Luscious Garden  760849
+22740286 FREE PARKING - The Velvet Lux in Melbourne CBD  30900122
+*/
+
+
+create table places(
+id int,
+    name varchar(2000),
+    host_id int
+);
+
+insert into places(id, name, host_id)
+values(4431977,'BOUTIQUE STAYS - Somerset Terrace, Pet Friendly',760849);
+
+insert into places(id, name, host_id)
+values(5194998,'BOUTIQUE STAYS - Elwood Beaches 3, Pet Friendly',760849);
+
+insert into places(id, name, host_id)
+values(16045624,'Urban Jungle in the Heart of Melbourne',30900122);
+
+insert into places(id, name, host_id)
+values(17810814,'Stylish Bayside Retreat with a Luscious Garden',760849);
+
+insert into places(id, name, host_id)
+values(22740286,'FREE PARKING - The Velvet Lux in Melbourne CBD',30900122);
+
+insert into places(id, name, host_id)
+values(22868779,'★ Fresh Fitzroy Pad with City Views! ★',21058208);
+
+SELECT ID, NAME, HOST_ID from places
+where host_id
+in (select HOST_ID from places
+	group by HOST_ID
+    having count(HOST_ID) >= 2);
