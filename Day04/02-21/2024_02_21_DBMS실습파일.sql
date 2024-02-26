@@ -1,0 +1,292 @@
+create table worker(
+num int auto_increment primary key,
+    id varchar(20) not null,
+    name varchar(10) not null,
+    gender char not null check (gender in ('M', 'F')),
+    age int not null,
+    department varchar(20) not null,
+    phone varchar(20) not null,
+    address varchar(200)
+);
+
+insert into worker(id, name, gender, age, department, phone, address)
+values('jhjang','장종훈','M',38,'총무부','010-3347-7474','서울시 강동구');
+
+insert into worker(id, name, gender, age, department, phone, address)
+values('jek98','안달훈','M',25,'인사부','010-3744-4747','강원도 정선군');
+insert into worker(id, name, gender, age, department, phone, address)
+values('ims2','이세영','F',48,'경리부','010-3736-4784','전라북도 전주시');
+insert into worker(id, name, gender, age, department, phone, address)
+values('apple3','김소영','F',52,'총무부','010-2845-8978','전라남도 순천시');
+insert into worker(id, name, gender, age, department, phone, address)
+values('sub093','김수정','M',53,'홍보부','010-3834-1248','경상북도 상주시');
+insert into worker(id, name, gender, age, department, phone, address)
+values('chulsu','김철수','M',23,'홍보부','010-1235-3788','경기도 오산시');
+insert into worker(id, name, gender, age, department, phone, address)
+values('yckim','김영철','M',32,'인사부','010-2222-3334','경기도 용인시');
+insert into worker(id, name, gender, age, department, phone, address)
+values('yerin99','김예린','F',25,'총무부','010-7777-9999','서울시 강서구');
+insert into worker(id, name, gender, age, department, phone, address)
+values('sjjung','정수정','F',35,'경리부','010-3636-3563','충청남도 아산시');
+insert into worker(id, name, gender, age, department, phone, address)
+values('tuttle7','이예린','F',21,'연구소','010-3756-9823','경기도 성남시');
+
+
+/*
+1. 홍보부에서 근무하는 사원의 모든 필드를 검색하는 쿼리문을 작성하세요
+2. 20대(20~29세)인 사원의 아이디, 이름, 집 주소를 검색하는 쿼리문을 작성하세요
+3. 경리부에 근무하는 이름에 '정'이 들어간 사원의 이름, 성별, 근무부서,
+   휴대전화 번호를 검색하는 쿼리문을 작성하세요
+4. 경기도에 사는 사원을 나이순으로 오름차순 정렬한 뒤 이름, 집, 주소, 성별,
+   휴대전화 번호를 검색하는 쿼리문을 작성하세요
+5. 여성 사원을 나이순으로 내림차순 정렬한 뒤 이름, 성별, 아이디, 휴대전화 번호,
+   집주소를 검색하는 쿼리문을 작성하세요
+6. 홍보부에서 근무하는 남성 사원의 이름과 휴대전화 번호를 검색하는 쿼리문을 작성하세요.
+7. 용인시에 사는 사원의 이름과 휴대전화 번호를 검색하는 쿼리문을 작성하세요.
+8. 김영철의 휴대전화 번호를 010-2222-3333으로 수정하는 쿼리문을 작성하세요.
+9. 아이디가 'chulsu'인 사원의 나이를 33으로 수정하는 쿼리문을 작성하세요.
+*/
+# id, name, gender, age, department, phone, address
+/* 1. 홍보부에서 근무하는 사원의 모든 필드를 검색하는 쿼리문을 작성하세요 */
+SELECT * FROM worker WHERE department = '홍보부';
+
+/* 2. 20대(20~29세)인 사원의 아이디, 이름, 집 주소를 검색하는 쿼리문을 작성하세요 */
+SELECT id, name, address FROM worker WHERE age >= 20 AND age <=29;
+
+/* 3. 경리부에 근무하는 이름에 '정'이 들어간 사원의 이름, 성별, 근무부서,
+   휴대전화 번호를 검색하는 쿼리문을 작성하세요 */
+SELECT name, gender, department, phone FROM worker 
+WHERE department = '경리부' AND name like '%정%';
+
+/* 4. 경기도에 사는 사원을 나이순으로 오름차순 정렬한 뒤 이름, 집 주소, 성별,
+   휴대전화 번호를 검색하는 쿼리문을 작성하세요 */
+SELECT name, address, gender, phone FROM worker 
+WHERE address like '경기도%' ORDER BY age;
+
+/* 5. 여성 사원을 나이순으로 내림차순 정렬한 뒤 이름, 성별, 아이디, 휴대전화 번호,
+   집주소를 검색하는 쿼리문을 작성하세요 */
+SELECT name, id, phone, address FROM worker 
+WHERE gender = 'F' ORDER BY age DESC;
+
+/* 6. 홍보부에서 근무하는 남성 사원의 이름과 휴대전화 번호를 검색하는 쿼리문을 작성하세요. */
+SELECT name, phone FROM worker 
+WHERE department = '홍보부' AND gender = 'M';
+
+/* 7. 용인시에 사는 사원의 이름과 휴대전화 번호를 검색하는 쿼리문을 작성하세요. */
+SELECT name, phone FROM worker WHERE address like '%용인시';
+
+/* 8. 김영철의 휴대전화 번호를 010-2222-3333으로 수정하는 쿼리문을 작성하세요. */
+SELECT * FROM worker WHERE name = '김영철';
+SET SQL_SAFE_UPDATES = 0; #세이프 업데이트 끄기
+UPDATE worker SET phone = '010-2222-3333' WHERE name = '김영철';
+
+/* 9. 아이디가 'chulsu'인 사원의 나이를 33으로 수정하는 쿼리문을 작성하세요. */
+SELECT * FROM worker WHERE id = 'chulsu';
+UPDATE worker SET age = 33 WHERE id = 'chulsu';
+
+SELECT name, LOWER(emp_type) FROM emp;
+SELECT name, UPPER(emp_type) FROM emp;
+
+#첫글자만 대문자로 변환(dual은 임시 테이블 생성)
+SELECT 'yunjun', concat(upper(left('yunjun', 3))) as '첫글자만 대문자'
+FROM dual;
+
+/*
+LEFT() - 입력 값에서 왼쪽 글자 추출하기
+RIGHT() - 입력 값에서 오른쪽 글자 추출하기
+MID() - 입력 값에서 특정위치 글자 추출하기 MID('문자열', 시작위치, 갯수)
+	  - 마지막 옵션을 정하지 않으면 자동으로 마지막 글자까지 잘라낸다
+*/
+SELECT LEFT('홍길동', 2) FROM DUAL;
+SELECT RIGHT('홍길동', 1) FROM DUAL;
+SELECT MID('홍길동' ,2 ,1) FROM DUAL;
+
+/*
+특정 위치의 문자 잘라서 추출하기
+substr()/substring() 
+- 주어진 문자열에서 글자수를 잘라서 출력
+- 글자수 미기입시 자동으로 시작위치부터 끝까지 출력
+형식)
+substr('문자열', 시작위치, 글자수)
+*/
+SELECT SUBSTR('MYSQL', 3) "결과1",
+	   SUBSTR('MYSQL', 3, 2) "결과2",
+       SUBSTRING('MYSQL', 3) "결과3"
+       FROM DUAL;
+       
+/*
+substring_index() 함수
+- 주어진 기호를 기준으로 잘라서 지정된 위치까지 출력하는 함수
+- 갯수에서 -를 기입시 끝에서 부터 출력
+
+형식)
+SUBSTRING_INDEX('문자열', '기호', 갯수)
+*/
+SELECT SUBSTRING_INDEX('blog.naver.com', '.', 1) FROM DUAL;
+SELECT SUBSTRING_INDEX('blog.naver.com', '.', 2) FROM DUAL;
+SELECT SUBSTRING_INDEX('blog.naver.com', '.', -1) FROM DUAL;
+SELECT SUBSTRING_INDEX('blog.naver.com', '.', -2) FROM DUAL;
+
+/* blog. naver.com을 각각 추출하세요! */
+SELECT SUBSTRING_INDEX('blog.naver.com', '.', 1) as '첫번째',
+SUBSTRING_INDEX(SUBSTRING_INDEX('blog.naver.com', '.', 2), '.', -1) as '두번째', 
+SUBSTRING_INDEX('blog.naver.com', '.', -1) as '마지막' 
+FROM DUAL;
+
+/*
+instr()/locate() : 특정 문자가 나오는 위치 값 찾기
+*/
+SELECT '02)123-4567' as 'tel', instr('02)123-4567', ')') as "INSTR"
+FROM DUAL;
+
+/*
+LPAD() : 왼쪽 부분의 공백을 채우는 함수
+RPAD() : 오른쪽 부분의 공백을 채우는 함수
+
+형식)
+LPAD(컬럼, 총 갯수, '채울 문자열')
+RLPAD(컬럼, 총 갯수, '채울 문자열')
+*/
+SELECT * FROM emp;
+SELECT NAME, HOBBY, LPAD(hobby, 15, '*') as "LPAD"
+FROM EMP WHERE deptno IN(1001, 1002, 1003);
+
+SELECT NAME, HOBBY, RPAD(hobby, 15, '*') as "RPAD"
+FROM EMP WHERE deptno IN(1001, 1002, 1003);
+
+/*
+emp 테이블에서 부서번호(deptno)가 1001, 1002인 사원들의 이름을
+20글자로 출력하되 LPAD 함수를 사용하여 빈자리에는 해당 자리에 *이 출력되도록 쿼리를 작성
+*/
+SELECT NAME as '이름', LPAD(NAME, 20, '*') as '* 추가버전' FROM EMP WHERE deptno IN (1001, 1002);
+
+/*
+REPEAT() : 주어진 문자열을 반복하여 출력
+REPLACE() : 주어진 문자열을 지정된 다른 문자나 기호로 변경
+
+형식)
+REPEAT('문자열', 횟수)
+REPLACE('문자열', '바꿀 문자열', '변경할 문자열')
+*/
+
+SELECT REPEAT('MYSQL', 3) FROM DUAL;
+SELECT '부산시 수영구' as '변경전',
+		REPLACE('부산시 수영구', '수영구', '사하구') as "변경후"
+        FROM DUAL;
+        
+/* 
+round() : 지정된 자리 수까지 반올림 하는 함수
+truncate() : 지정된 자리 수까지 버림을 하는 함수
+power() : 주어진 숫자를 횟수만큼 곱해서 결과를 출력하는 함수
+
+형식)
+round(A/B, 번째 자리수에서 반올림)
+truncate(A/B, 번째 자리수에서 반올림)
+power(A,B)
+*/
+SELECT round(10/3,1), round(10/3,2),
+	   truncate(10/3,1), truncate(10/3,2),
+       power(3,3) FROM DUAL;
+       
+/*
+div() : 나눈 몫을 출력한다
+mod() : 나머지 값을 출력한다
+
+형식)
+A div B
+A mod B
+*/
+SELECT 10 div 3 as "div_result" FROM DUAL;
+SELECT 10 mod 3 as "div_result" FROM DUAL;
+
+/*
+current_date() : YYYY-MM-DD
+current_time() : HH-MM-SS
+current_timestamp() : YYYY-MM-DD HH-MM-SS
+*/
+SELECT current_date() FROM DUAL;
+SELECT current_time() FROM DUAL;
+SELECT current_timestamp() FROM DUAL;
+
+/*
+datediff() : 두 날짜간 차이를 출력
+period_diff() : 두 날짜간 개월 수 차이를 출력
+date_add() : 날짜에 주어진 값을 더한 값 출력
+date_sub() : 날짜에 주어진 값을 뺀 값 출력
+
+형식)
+datediff(YYYYMMDD, YYYYMMDD)
+period_diff(YYYYMM, YYYYMM)
+date_add('YYYY-MM-DD', interval N day) N일 만큼 추가 됨
+date_sub('YYYY-MM-DD', interval N day) N일 만큼 빼주게 됨
+*/
+SELECT datediff(20221023, 20221001) "두 날짜간 차이" FROM DUAL;
+SELECT period_diff(202210, 202110) "개월수" FROM DUAL;
+
+/* date_add() : 날짜에 주어진 값을 더하거나 뺸 값 출력 */
+SELECT date_add('2022-01-10', interval 10 day) "10 next" FROM DUAL;
+SELECT date_sub('2022-01-20', interval 10 day) "10 sub" FROM DUAL;
+
+/*
+week() : 주어진 날짜가 속한 주 값을 출력
+weekday() : 주어진 날짜가 속한 요일 값을 출력
+month() : 주어진 날짜의 월을 출력
+year() : 주어진 날짜의 연도를 출력
+
+형식)
+week('YYYY-MM-DD')
+weekday('YYYY-MM-DD')
+month('YYYY-MM-DD')
+year('YYYY-MM-DD')
+*/
+SELECT week('2022-02-10') FROM DUAL;
+SELECT weekday('2022-02-10') FROM DUAL;
+SELECT month('2022-02-10') FROM DUAL;
+SELECT year('2022-02-10') FROM DUAL;
+
+/*
+숫자의 경우 천 단위 구분 기호로 표시하기
+- 단위가 큰 숫자를 출력할 때 천 단위를 구분하기 위해 콤마 표시를 사용해서 출력
+format() : 기본적으로 천단위가 끊어져서 출력
+
+형식)
+format(컬럼1, A) - 컬럼의 자릿수가 천단위로 끊어져 출력되고 A자릿수 만큼 소숫점이 출력
+*/
+
+SELECT name, pay, format(pay, 0) FROM emp;
+SELECT name, pay, format(pay, 2) FROM emp;
+
+/* 
+MySQL에서 자주 사용하는 그룹함수
+count(), min(), max(), sum(), avg()
+*/
+CREATE TABLE hero(
+	idx int auto_increment primary key,
+    type int,
+    name varchar(20)
+    );
+
+insert into hero(type, name) values(1, '안중근');
+insert into hero(type, name) values(1, '윤봉길');
+insert into hero(type, name) values(2, '김유신');
+insert into hero(type, name) values(2, '이순신');
+insert into hero(type, name) values(3, '이성계');
+insert into hero(type, name) values(3, '홍길동');
+insert into hero(type, name) values(4, '홍길순');
+
+/* 
+GROUP BY 사용법
+특정 컬럼을 그룹화한 결과에 조건을 거는 having
+
+WHERE : 그룹화 하기 전의 조건
+HAVING : 그룹화 후의 조건
+
+형식)
+SELECT 컬럼 FROM 테이블 GROUP BY 그룹화 할 컬럼
+*/
+SELECT * FROM hero;
+SELECT type, count(name) as 'cnt' 
+FROM hero GROUP BY type;
+
+/* type이 1이 아닌것을 그룹화 하여 name 갯수 조회 */
+SELECT type, count(name) as 'cnt' FROM hero where type != 1 GROUP BY type;
