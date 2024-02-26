@@ -243,6 +243,13 @@ insert into tbl1(select * from employee);
 select * from tbl1;
 
 -- 인턴의 정보를 가져와서 급여를 10만원 인상
+/*
+mysql에서 update문은 동일한 테이블을 대상으로 하는 서브쿼리 사용에 제한이 있음 
+이걸 우회하는 방법으로는 join을 사용하는 것임 
+즉) employee 테이블을 자기 자신과 join 하여 업데이트를 수행할 수 있다 
+중간에 별칭을 사용하는 방식으로 처리함 
+*/
 SELECT * FROM employee;
-UPDATE employee set sal = (sal + 100000)
-WHERE id = (select id from employee where worker = '인턴');
+update employee as e
+inner join (select id from employee where worker = '인턴')
+as sub on e.id = sub.id set e.sal = e.sal + 100000;
