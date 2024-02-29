@@ -197,7 +197,7 @@ create Trigger check_remove_name
     FOR EACH ROW
     
     BEGIN
-		INSERT INTO test1Del VALUES(num, name, age);
+		INSERT INTO test1Del VALUES(old.num, old.name, old.age);
 	END //
 DELIMITER ;
 
