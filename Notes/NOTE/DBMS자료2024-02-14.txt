@@ -1,0 +1,112 @@
+DBMS 수업(2024/02/14)
+
+프로그램 - mySQL
+===================초기 설정=====================
+설치방법
+https://dev.mysql.com/downloads/installer/
+https://dev.mysql.com/downloads/workbench/
+버전 - 8.0.36
+윈도우용
+
+2번째꺼 다운
+Windows (x86, 32-bit), MSI Installer	8.0.36	285.3M	
+Download
+(mysql-installer-community-8.0.36.0.msi)	MD5: d63232c190d0c9c294a2f8d776ed1c20 | Signature
+
+No thanks, just start my download. <- 이거 클릭
+
+패키지 열기
+- Custom 선택
+- mySQLServer -> server8.0.36 체크 
+  mySQL Shell -> 8.0.36 체크
+
+Authentication Method에서 Use Legacy Authentication Method(Retain MySQL 5.x Compatibility) 체크
+
+Accounts and Roles
+MySQL Root Password : 1q2w3e4r
+===================계정 설정=====================
+계정생성 ID : hr@localhost PW : hr
+create user hr@localhost identified by 'hr'
+
+hr@localhost에게 권한 부여
+grant all privileges on dbexam.* to hr@localhost
+===================자료 정리=====================
+종류 및 프로그램
+
+데이터베이스 (데이터의 집합, 대부분의 정보가 저장되고 관리 됨)
+- 관계형 데이터베이스(RDBMS)
+- 비관계형 데이터베이스(NoSQL)
+- 시계열 데이터베이스
+
+관계형 데이터베이스
+- ORACLE, MySQL, MariaDB, MSSQL
+
+데이터베이스의 특징
+- 무결성, 일관성, 회복성, 보안성
+
+* 무결성 : 부적절한 자료가 입력되어 동일한 내용에 대하여
+	 서로 다른 데이터가 저장되는 것을 허용하지 않음
+
+* 일관성 : 삽입, 삭제, 갱신, 생성 후에도 저장된 데이터가 변함없다
+
+* 회복성 : 장애가 발생했을 때 특정 상태로 복귀되어야 하는 성질
+
+* 보안성 : 불법적이 노출, 변경, 손실로부터 보호되어야 하는 성질
+
+* 효율성 : 응답시간, 저장공간 활용등이 최적화 되어 사용자, 
+	 시스템등의 요규조건을 만족시켜야 하는 성질
+
+========================================
+DBMS : 데이터베이스를 관리하고 운영하느 소프트웨어
+DBMS 종류 : ORACLE, MySQL, MariaDB, MSSQL
+
+* SQL : DBMS에서 사용되는 언어 데이터베이스를 조작할 수 있는 언어
+
+========================================
+DBMS의 장단점
+
+* 장점
+- 자료의 통합성을 증진시키고 데이터의 접근을 용이하게 해줌
+- 장애 발생시 회복이 가능하고 표준화가 가능
+- 데이터의 통제가 쉬워지고 애플리케이션 프로그램을 쉽게 개발하고 관리 가능
+
+* 단점
+- 고가의 제품이고 컴퓨터 시스템의 자원을 많이 사용
+- 통합된 시스템이기에 일부가 장애를 일으키면 전체 시스템에 장애가 발생
+
+========================================
+관계형 데이터베이스
+- 테이블이라는 최소 단위로 구성되며, 이 테이블은 하나이상의 열(COLUMN), 행(ROW)로 구성
+- 모든 데이터는 테이블에 저장
+
+========================================
+SQL 문법 3가지(DDL, DML, DCL)
+DDL
+- 테이블이나 관계의 구조를 생성하는데 사용
+- CREATE, ALTER, DROP, TRUNCATE
+
+DML
+- 테이블에 데이터 검색, 삽입, 수정, 삭제하는데 사용
+- SELECT, INSERT, UPDATE, DELETE
+
+DCL
+- 데이터의 사용 권한을 관리하는데 사용
+- GRANT, REVOKE, COMMIT, ROLLBACK
+========================================
+CRUD
+- CRUD는 대부분의 컴퓨터 소프트웨어가 가지는 기본적인 데이터 처리 기능인 Create(생성), Read(읽기), Update(갱신), Delete(삭제)를 묶어서 일컫는 말
+- 사용자 인터페이스가 갖추어야 할 기능(정보의 참조/검색/갱신)을 가리키는 용어
+
+* Create: 생성(INSTER)
+* Read(Retrieve) : 읽기, 인출(SELECT)
+* Update : 갱신(UPDATE)
+* Delete(Destroy) : 삭제, 파괴(DELETE)
+===================커리큘럼=====================
+커리큘럼
+1. 설치, 개념정리, 간단하게 쿼리 연습
+2. select
+3. group by, join, 서브쿼리
+4. 인덱스
+5. 트리거
+6. 프로시저
+7. 프로그래머스
