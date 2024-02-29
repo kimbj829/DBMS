@@ -1,0 +1,87 @@
+/*
+토글이 설치 불가 설정시
+set global log_bin_trust_function_creators=on;
+*/
+select * from test1;
+select * from test1Del;
+
+Delete from test1 where num = 10;
+-- 트리거 삭제
+DROP TRIGGER IF EXISTS check_remove_name;
+
+INSERT INTO test1(name, age) values('홍길동', 24);
+insert into test1(name, age) values('장독대', 30);
+insert into test1(name, age) values('전우치', 77);
+insert into test1(name, age) values('폰셔틀', 44);
+
+/*
+DELIMITER : 문장을 구분해주기 위해 사용되며 입력 안할 시 오류가 남
+OLD : 이벤트가 일어나기 이전 데이터, delete 로 삭제 된 데이터 또는 update 로 바뀌기 전의 데이터
+NEW : 이벤트가 일어난 이후 데이터, insert 로 삽입된 데이터 또는 update 로 바뀐 후의 데이터
+형식)
+OLD.컬럼명 NEW.컬럼명
+*/
+DELIMITER //
+create trigger remove_tbl
+		after delete		-- 삭제 되면 가동(after 조건)
+        on test1			-- 테이블 명(on 테이블)
+	for each row			-- 각 행마다 적용하겠다
+    
+    BEGIN
+    insert into test1Del values(old.num, old.name, old.age);
+    END;
+// DELIMITER ;
+
+select * from test1;
+delete from test1 where num = 6;
+
+
+/*
+트리거의 장단점
+장점
+- 데이터의 무결성 유지에 좋다
+- 데이터베이스 관리가 용이해짐
+
+단점
+- 데이터베이스의 복잡성과 유지 관리가 어렵다
+- 자동화 처리가 예기치 않은 결과를 초래할 수 있다
+*/
+
+select num, name from test1 where name = '전우치';
+
+/*
+Index
+- 데이터베이스 테이블의 검색 속도를 향상시키기 위해 사용
+- 데이터가 많은 테이블 사용하면 좋다
+- Join이나 Where 또는 Order by에 자주 사용되는 컬럼
+
+인덱스 장점
+- 테이블 조회 속도가 빨라짐
+- 전반적인 시스템의 부하를 줄일 수 잇음
+
+단점
+- 인덱스를 관리하기 위해 추가 작업이 필요
+- 인덱스를 관리하기 위해 db의 약 10%에 해당하는 저장공간이 필요
+- 만약 update, delete가 빈번한 속성에 인덱스를 걸게 되면 성능 저하 발생
+*/
+
+select * from employee;
+
+create table cop_employee(
+	id int,
+    name varchar(30),
+    sal int,
+    worker varchar(30)
+    );
+insert into cop_employee select id, name, sal, worker
+from employee limit 1000;
+
+select * from cop_employee;
+
+-- 인덱스 생성
+create index cop_employee_name on cop_employee(name);
+
+select id, name from cop_employee where name = '장과장';
+select id, name from employee where name = '장과장';
+
+show index from cop_employee;
